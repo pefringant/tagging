@@ -14,14 +14,14 @@ class Tagged extends TaggingAppModel
 	 * Finds tags related to a record
 	 *
 	 * @param string $model Model name
-	 * @param int $assoc_key Related model primary key
+	 * @param int $model_id Related model primary key
 	 * @return mixed Found related tags
 	 */
-	function findTags($model, $assoc_key)
+	function findTags($model, $model_id)
 	{
 		$conditions = array(
 			'Tagged.model' => $model,
-			'Tagged.assoc_key' => $assoc_key
+			'Tagged.model_id' => $model_id
 		);
 		
 		$fields    = array('Tag.id', 'Tag.name', 'Tag.slug', 'Tag.created');
@@ -95,7 +95,7 @@ class Tagged extends TaggingAppModel
 	 *
 	 * @param unknown_type $model
 	 * @param unknown_type $tag_ids
-	 * @param unknown_type $exclude_assoc_key
+	 * @param unknown_type $exclude_model_id
 	 * @return array
 	 */
 	function taggedWith($model = null, $tag_ids = array(), $exclude_id = null, $limit = null)
@@ -114,7 +114,7 @@ class Tagged extends TaggingAppModel
 			$conditions['id !='] = $exclude_id;
 		}
 		
-		$fields    = array('model', 'assoc_key', 'COUNT(tag_id) as count');
+		$fields    = array('model', 'model_id', 'COUNT(tag_id) as count');
 		$group     = 'tag_id';
 		$order     = 'count DESC';
 		$recursive = -1;

@@ -38,7 +38,7 @@ class TaggableBehavior extends ModelBehavior
 		
 		$tagged_conditions = array(
 			'model'     => $model->alias,
-			'assoc_key' => $model->id,
+			'model_id' => $model->id,
 		);
 		
 		$this->Tagged->deleteAll($tagged_conditions, false, true);
@@ -168,7 +168,7 @@ class TaggableBehavior extends ModelBehavior
 		// Excludind this $id from the results
 		$exclude = $this->Tagged->find('first', array(
 			'fields' => 'id',
-			'conditions' => array('model' => $model->alias, 'assoc_key' => $id),
+			'conditions' => array('model' => $model->alias, 'model_id' => $id),
 			'recursive' => -1
 		));
 		
@@ -196,7 +196,7 @@ class TaggableBehavior extends ModelBehavior
 			foreach($related as $row)
 			{
 				$conditions = array(
-					$model->escapeField($model->primaryKey) => $row['Tagged']['assoc_key']
+					$model->escapeField($model->primaryKey) => $row['Tagged']['model_id']
 				);
 	
 				$results[] = $model->find('first', compact('conditions'));
@@ -209,7 +209,7 @@ class TaggableBehavior extends ModelBehavior
 				if($assoc_model = ClassRegistry::init($row['Tagged']['model']))
 				{
 					$conditions = array(
-						$assoc_model->escapeField($assoc_model->primaryKey) => $row['Tagged']['assoc_key']
+						$assoc_model->escapeField($assoc_model->primaryKey) => $row['Tagged']['model_id']
 					);
 		
 					$results[] = $assoc_model->find('first', $options);
