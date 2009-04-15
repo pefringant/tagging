@@ -50,7 +50,7 @@ class Tag extends TaggingAppModel
 		
 		$first_letters = trim($first_letters);
 		
-		if(strlen($first_letters) <= 2)
+		if(Multibyte::strlen($first_letters) <= 2)
 		{
 			return;
 		}
