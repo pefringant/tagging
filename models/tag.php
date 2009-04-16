@@ -60,7 +60,7 @@ class Tag extends TaggingAppModel
 		$fields     = array('name');
 		$conditions = array('name LIKE' => "{$first_letters}%");
 		$order      = 'name ASC';
-		$limit      = 20;
+		$limit      = 10;
 		$recursive  = -1;
 		
 		$matches = $this->find('all', compact('fields', 'conditions', 'order', 'limit', 'recursive'));
@@ -104,6 +104,9 @@ class Tag extends TaggingAppModel
 	 * Find used tags, all models
 	 *
 	 * @param array $options Options (same as classic find options)
+	 * Two new keys available :
+	 * - min_count : minimum number of times a tag is used
+	 * - max_count : maximum number of times a tag is used
 	 * @return array
 	 */
 	function tagCloud($options = array())

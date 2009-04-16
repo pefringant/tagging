@@ -88,7 +88,7 @@ class TaggableBehavior extends ModelBehavior
 	{
 		if(!$id && !$model->id)
 		{
-			return false;
+			return;
 		}
 		
 		if(!$id)
@@ -195,11 +195,9 @@ class TaggableBehavior extends ModelBehavior
 		{
 			foreach($related as $row)
 			{
-				$conditions = array(
-					$model->escapeField($model->primaryKey) => $row['Tagged']['model_id']
-				);
+				$model->id = $row['Tagged']['model_id'];
 	
-				$results[] = $model->find('first', compact('conditions'));
+				$results[] = $model->read();
 			}
 		}
 		else
@@ -208,11 +206,9 @@ class TaggableBehavior extends ModelBehavior
 			{
 				if($assoc_model = ClassRegistry::init($row['Tagged']['model']))
 				{
-					$conditions = array(
-						$assoc_model->escapeField($assoc_model->primaryKey) => $row['Tagged']['model_id']
-					);
+					$assoc_model->id = $row['Tagged']['model_id'];
 		
-					$results[] = $assoc_model->find('first', $options);
+					$results[] = $assoc_model->read();
 				}
 			}
 		}
