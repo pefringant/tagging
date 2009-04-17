@@ -23,15 +23,17 @@ class Tag extends TaggingAppModel
 				'rule' => 'notEmpty',
 				'required' => true,
 				'allowEmpty' => false,
+				'message' => 'notEmpty'
 			),
 			'isUnique' => array(
 				'rule' => 'isUnique',
 				'on' => 'create',
+				'message' => 'isUnique'
 			)
 		),
 		'slug' => array(
 			'rule' => 'notEmpty',
-			'on' => 'update',
+			'on' => 'update'
 		),
 	);
 	

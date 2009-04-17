@@ -53,6 +53,14 @@ Multi-model tagging plugin for CakePHP.
 =================
 Go to URL /admin/tagging: you can add a tag or view existing tags.
 
+The default views here are very basic, they just had been baked with the cake "bake" shell.
+
+If any of the default views in this plugin does not meet your needs, create your own and place it in your app, in 
+{app}/views/plugins/tagging/{controller name}/{view name}.ctp
+
+For example, if you want to customize the admin list of tags, simply create your own in:
+{app}/views/plugins/tagging/tags/admin_index.ctp
+
 4. FINDING TAGS
 ================
 
@@ -201,7 +209,7 @@ Go to URL /admin/tagging: you can add a tag or view existing tags.
 			<span class="cloud-item"><a href="/mytags/read/2/tag2-slug" class="size-class-3">Tag 2</a></span>
 			<span class="cloud-item"><a href="/mytags/read/3/tag3-slug" class="size-class-7">Tag 3</a></span>
 			...
-		</ul>
+		</div>
 		
 6. BROWSING TAGS
 ================
@@ -210,7 +218,7 @@ Go to URL /admin/tagging: you can add a tag or view existing tags.
 	------------
 	Default URL: /tagging/tags/view/ followed by tag id, tag slug, or both in any order.
 	
-	You have to create a view for this action, in {app}/views/tags/view.ctp
+	You have to create a view for this action, in {app}/views/plugins/tagging/tags/view.ctp
 	
 	Tag data available in $data.
 	
@@ -218,7 +226,7 @@ Go to URL /admin/tagging: you can add a tag or view existing tags.
 	-------------
 	Default URL: /tagging/tags
 	
-	You have to create a view for this action, in {app}/views/tags/index.ctp
+	You have to create a view for this action, in {app}/views/plugins/tagging/tags/index.ctp
 	
 	Tags data available in $data.
 
@@ -233,4 +241,5 @@ Go to URL /admin/tagging: you can add a tag or view existing tags.
 	To change (for French for example), add this line in your app/config/bootstrap.php :
 	Configure::write('Config.language', 'fre');
 	
-	To add a translation, open the file /tagging/locale/tagging.pot in PoEdit or equivalent, then save the translation to /tagging/locale/{your language}/LC_MESSAGES/tagging.po 	
+	To add a translation, open the file /tagging/locale/tagging.pot in PoEdit or equivalent, then save the 
+	translation to /tagging/locale/{your language}/LC_MESSAGES/tagging.po 	
