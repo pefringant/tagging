@@ -1,21 +1,21 @@
 <div class="tags form">
 <?php echo $form->create('Tag');?>
 	<fieldset>
- 		<legend><?php __('Add Tag');?></legend>
+ 		<legend><?php __d('tagging', 'Add Tag');?></legend>
 	<?php
 		echo $form->input('name', array(
-			'label' => __('Name:', true),
+			'label' => __d('tagging', 'Name:', true),
 			'error' => array(
-				'notEmpty' => __('Tag name cannot be left blank', true),
-				'isUnique' => __('This Tag already exists.', true),
+				'notEmpty' => __d('tagging', 'Tag name cannot be left blank', true),
+				'isUnique' => __d('tagging', 'This Tag already exists.', true),
 			)
 		));
 	?>
 	</fieldset>
-<?php echo $form->end(__('Submit', true));?> 
+<?php echo $form->end(__d('tagging', 'Submit', true));?> 
 </div>
 <div class="actions">
 	<ul>
-		<li><?php echo $html->link(__('List Tags', true), array('action'=>'index'));?></li>
+		<li><?php echo $html->link(__d('tagging', 'List Tags', true), array('action'=>'index'));?></li>
 	</ul>
 </div>

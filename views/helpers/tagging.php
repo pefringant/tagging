@@ -57,7 +57,7 @@ class TaggingHelper extends AppHelper
 			// Alert if jQuery not inclduded when debug > 0
 			if(Configure::read('debug') > 0)
 			{
-				$alert_mssg = __('Tag suggestion requires jQuery !', true);
+				$alert_mssg = __d('tagging', 'Tag suggestion requires jQuery !', true);
 				
 				$alert = "if(typeof jQuery != 'function'){
 					alert('{$alert_mssg}');

@@ -86,12 +86,12 @@ class TagsController extends TaggingAppController
 			
 			if($this->Tag->save($this->data))
 			{
-				$this->Session->setFlash(__('The Tag has been saved', true));
+				$this->Session->setFlash(__d('tagging', 'The Tag has been saved', true));
 				$this->redirect(array('action'=>'index'));
 			}
 			else
 			{
-				$this->Session->setFlash(__('The Tag could not be saved. Please, try again.', true));
+				$this->Session->setFlash(__d('tagging', 'The Tag could not be saved. Please, try again.', true));
 			}
 		}
 	}
@@ -105,7 +105,7 @@ class TagsController extends TaggingAppController
 	{
 		if(!$id && empty($this->data))
 		{
-			$this->Session->setFlash(__('Invalid Tag', true));
+			$this->Session->setFlash(__d('tagging', 'Invalid Tag', true));
 			$this->redirect(array('action'=>'index'));
 		}
 		
@@ -113,12 +113,12 @@ class TagsController extends TaggingAppController
 		{
 			if($this->Tag->save($this->data))
 			{
-				$this->Session->setFlash(__('The Tag has been saved', true));
+				$this->Session->setFlash(__d('tagging', 'The Tag has been saved', true));
 				$this->redirect(array('action' => 'index'));
 			}
 			else
 			{
-				$this->Session->setFlash(__('The Tag could not be saved. Please, try again.', true));
+				$this->Session->setFlash(__d('tagging', 'The Tag could not be saved. Please, try again.', true));
 			}
 		}
 		
@@ -137,12 +137,12 @@ class TagsController extends TaggingAppController
 	{
 		if(!$id)
 		{
-			$this->Session->setFlash(__('Invalid id for Tag', true));
+			$this->Session->setFlash(__d('tagging', 'Invalid id for Tag', true));
 		}
 		
 		if($this->Tag->del($id))
 		{
-			$this->Session->setFlash(__('Tag deleted', true));
+			$this->Session->setFlash(__d('tagging', 'Tag deleted', true));
 		}
 		
 		$this->redirect(array('action' => 'index'));

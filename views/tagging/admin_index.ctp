@@ -1,10 +1,10 @@
 <?php
-$this->pageTitle = __('Tagging admin', true);
+$this->pageTitle = __d('tagging', 'Tagging admin', true);
 ?>
 
 <ul>
 	<li><?php echo $html->link(
-		__('Add Tag', true),
+		__d('tagging', 'Add Tag', true),
 		array(
 			'plugin' => 'tagging',
 			'controller' => 'tags',
@@ -12,7 +12,7 @@ $this->pageTitle = __('Tagging admin', true);
 		)
 	); ?></li>
 	<li><?php echo $html->link(
-		__('List Tags', true),
+		__d('tagging', 'List Tags', true),
 		array(
 			'plugin' => 'tagging',
 			'controller' => 'tags',
