@@ -114,8 +114,8 @@ class Tagged extends TaggingAppModel
 			$conditions['id !='] = $exclude_id;
 		}
 		
-		$fields    = array('model', 'model_id', 'COUNT(tag_id) as count');
-		$group     = 'tag_id';
+		$fields    = array('model', 'model_id', 'COUNT(*) as count');
+		$group     = array('model', 'model_id');
 		$order     = 'count DESC';
 		$recursive = -1;
 		

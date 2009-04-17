@@ -63,7 +63,7 @@ class TaggableBehavior extends ModelBehavior
 	 */
 	function afterFind(&$model, $results, $primary = false)
 	{
-		if(count($results) == 1 && isset($results[0][$model->alias]))
+		if(count($results) == 1 && isset($results[0][$model->alias][$model->primaryKey]))
 		{
 			$tags = $this->Tagged->findTags(
 				$model->alias,
@@ -189,19 +189,21 @@ class TaggableBehavior extends ModelBehavior
 		}
 		
 		// Final results
-		$results = array();
-
 		if($restrict_to_model)
 		{
-			foreach($related as $row)
-			{
-				$model->id = $row['Tagged']['model_id'];
-	
-				$results[] = $model->read();
-			}
+			$model_ids = Set::extract('/Tagged/model_id', $related);
+			
+			$pk = $model->escapeField($model->primaryKey);
+			
+			$conditions = array($pk => $model_ids);
+			$order = "FIELD({$pk}, " . join(', ', $model_ids) . ")";
+			
+			$results = $model->find('all', compact('conditions', 'order'));
 		}
 		else
 		{
+			$results = array();
+			
 			foreach($related as $row)
 			{
 				if($assoc_model = ClassRegistry::init($row['Tagged']['model']))
