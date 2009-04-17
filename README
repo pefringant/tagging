@@ -221,4 +221,16 @@ Go to URL /admin/tagging: you can add a tag or view existing tags.
 	You have to create a view for this action, in {app}/views/tags/index.ctp
 	
 	Tags data available in $data.
+
+7. TRANSLATIONS
+===============
+
+	Available languages :
+	- English
+	- French
+	Defaults to English.
 	
+	To change (for French for example), add this line in your app/config/bootstrap.php :
+	Configure::write('Config.language', 'fre');
+	
+	To add a translation, open the file /tagging/locale/tagging.pot in PoEdit or equivalent, then save the translation to /tagging/locale/{your language}/LC_MESSAGES/tagging.po 	
