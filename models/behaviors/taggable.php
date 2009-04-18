@@ -155,10 +155,7 @@ class TaggableBehavior extends ModelBehavior
 			$id = $model->id;
 		}
 		
-		// Record's tags
-		$tags = $this->Tagged->findTags($model->alias, $id);
-		
-		if(empty($tags))
+		if(!$tags = $this->Tagged->findTags($model->alias, $id))
 		{
 			return;
 		}
@@ -173,10 +170,15 @@ class TaggableBehavior extends ModelBehavior
 			$taggedWith_model = $model->alias;
 		}
 		
-		// Related records
-		$related = $this->Tagged->taggedWith($taggedWith_model, $tag_ids, $id, $limit);
+		// Exclude this record from results
+		$exclude_ids = array_values($this->find('list', array(
+			'fields'     => 'id',
+			'conditions' => array('model' => $model, 'model_id' => $exclude_id),
+			'recursive'  => -1
+		)));
 		
-		if(empty($related))
+		// Related records
+		if(!$related = $this->Tagged->taggedWith($taggedWith_model, $exclude_ids, $id, $limit))
 		{
 			return;
 		}
