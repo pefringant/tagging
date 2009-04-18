@@ -173,7 +173,7 @@ class TaggableBehavior extends ModelBehavior
 		// Exclude this record from results
 		$exclude_ids = array_values($this->find('list', array(
 			'fields'     => 'id',
-			'conditions' => array('model' => $model, 'model_id' => $exclude_id),
+			'conditions' => array('model' => $model->alias, 'model_id' => $id),
 			'recursive'  => -1
 		)));
 		
