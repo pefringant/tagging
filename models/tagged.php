@@ -91,14 +91,14 @@ class Tagged extends TaggingAppModel
 	}
 	
 	/**
-	 * Find records tagged with $tag_ids, excluding record of id $exclude_id
+	 * Find records tagged with $tag_ids, excluding a model_id
 	 *
-	 * @param unknown_type $model
-	 * @param unknown_type $tag_ids
-	 * @param unknown_type $exclude_model_id
+	 * @param string $model Model name
+	 * @param mixed $tag_ids Tag id(s)
+	 * @param int $exclude_id Model id to exclude
 	 * @return array
 	 */
-	function taggedWith($model = null, $tag_ids = array(), $exclude_id = null, $limit = null)
+	function taggedWith($model = null, $tag_ids = null, $exclude_id = null, $limit = null)
 	{
 		$conditions = array(
 			'tag_id' => $tag_ids,
@@ -111,7 +111,13 @@ class Tagged extends TaggingAppModel
 		
 		if($exclude_id)
 		{
-			$conditions['id !='] = $exclude_id;
+			$exclude_ids = array_values($this->find('list', array(
+				'fields'     => 'id',
+				'conditions' => array('model' => $model, 'model_id' => $exclude_id),
+				'recursive'  => -1
+			)));
+			
+			$conditions['NOT'] = array('id' => $exclude_ids);
 		}
 		
 		$fields    = array('model', 'model_id', 'COUNT(*) as count');

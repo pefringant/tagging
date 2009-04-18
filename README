@@ -9,7 +9,7 @@ Multi-model tagging plugin for CakePHP.
 	
 	git clone git://github.com/kalt/tagging.git
 	
-	Or click 'download' and copy the content of the zip file into your 'plugins' directory.
+	Or click 'download' and copy the content of the zip file into your 'plugins' folder.
 	
 	1.2. DB tables
 	--------------

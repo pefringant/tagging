@@ -165,13 +165,6 @@ class TaggableBehavior extends ModelBehavior
 		
 		$tag_ids = Set::extract('/Tag/id', $tags);
 		
-		// Excludind this $id from the results
-		$exclude = $this->Tagged->find('first', array(
-			'fields' => 'id',
-			'conditions' => array('model' => $model->alias, 'model_id' => $id),
-			'recursive' => -1
-		));
-		
 		// Restrict to Model ?
 		$taggedWith_model = null;
 		
@@ -181,7 +174,7 @@ class TaggableBehavior extends ModelBehavior
 		}
 		
 		// Related records
-		$related = $this->Tagged->taggedWith($taggedWith_model, $tag_ids, $exclude['Tagged']['id'], $limit);
+		$related = $this->Tagged->taggedWith($taggedWith_model, $tag_ids, $id, $limit);
 		
 		if(empty($related))
 		{
