@@ -65,14 +65,9 @@ class Tag extends TaggingAppModel
 		$limit      = 10;
 		$recursive  = -1;
 		
-		$matches = $this->find('all', compact('fields', 'conditions', 'order', 'limit', 'recursive'));
-		
-		if(empty($matches))
-		{
-			return;
-		}
-		
-		return Set::extract('/Tag/name', $matches);
+		return array_values($this->find('list', compact(
+			'fields', 'conditions', 'order', 'limit', 'recursive'
+		)));
 	}
 	
 	/**
@@ -132,6 +127,12 @@ class Tag extends TaggingAppModel
 		}
 				
 		$options = Set::merge(compact('conditions'), $options);
+		
+		// 'Order by' default
+		if(empty($options['order']))
+		{
+			$options['order'] = 'Tag.name ASC';
+		}
 		
 		// Recursive level imposed
 		$options['recursive'] = -1;
