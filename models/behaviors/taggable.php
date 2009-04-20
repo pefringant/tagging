@@ -171,14 +171,14 @@ class TaggableBehavior extends ModelBehavior
 		}
 		
 		// Exclude this record from results
-		$exclude_ids = array_values($this->find('list', array(
+		$exclude_ids = array_values($this->Tagged->find('list', array(
 			'fields'     => 'id',
 			'conditions' => array('model' => $model->alias, 'model_id' => $id),
 			'recursive'  => -1
 		)));
 		
 		// Related records
-		if(!$related = $this->Tagged->taggedWith($taggedWith_model, $exclude_ids, $id, $limit))
+		if(!$related = $this->Tagged->taggedWith($taggedWith_model, $tag_ids, $exclude_ids, $limit))
 		{
 			return;
 		}
