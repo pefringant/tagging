@@ -6,7 +6,8 @@ class Tag extends TaggingAppModel
 	var $displayField = 'name';
 
 	var $hasMany = array('Tagged' => array(
-		'className' => 'Tagging.Tagged'
+		'className' => 'Tagging.Tagged',
+		'dependent' => true
 	));
 	
 	var $actsAs = array(
