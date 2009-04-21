@@ -6,7 +6,13 @@ class TagsController extends TaggingAppController
 	var $paginate = array(
 		'Tag' => array(
 			'order' => 'Tag.name ASC',
-			'limit' => 20
+			'limit' => 20,
+			'recursive' => -1
+		),
+		'Tagged' => array(
+			'fields' => array('Tagged.model', 'Tagged.model_id'),
+			'order' => 'Tagged.id DESC',
+			'limit' => 10
 		)
 	);
 	
@@ -28,18 +34,32 @@ class TagsController extends TaggingAppController
 	}
 	
 	/**
-	 * List Tags
-	 * You have to create a view for this action in {your_app}/views/tags/index.ctp
+	 * All Tags used at least once
+	 * You have to create a view for this action in {your_app}/views/plugins/tagging/tags/index.ctp
+	 * 
+	 * Available variables in view :
+	 * $data : all used tags ordered by name ASC
 	 */
 	function index()
 	{
-		$this->set('data', $this->paginate());
+		$data = $this->Tag->tagCloud();
+		
+		if(isset($this->params['requested']))
+		{
+			return $data;
+		}
+		
+		$this->set('data', $data);
 	}
 	
 	/**
 	 * View Tag
-	 * Checks $this->params['pass'] for tag slug or tag id
-	 * You have to create a view for this action in {your_app}/views/tags/view.ctp
+	 * Checks $this->params['pass'] for slug or id
+	 * You have to create a view for this action in {your_app}/views/plugins/tagging/tags/view.ctp
+	 * 
+	 * Available variables in view :
+	 * $tag : Tag data
+	 * $data : paginated ressources tagged with this tag
 	 */
 	function view()
 	{
@@ -59,12 +79,24 @@ class TagsController extends TaggingAppController
 			$findMethod = 'findBySlug';
 		}
 		
-		if(!$data = $this->Tag->{$findMethod}($param))
+		$this->Tag->recursive = -1;
+		
+		if(!$tag = $this->Tag->{$findMethod}($param))
 		{
 			$this->cakeError('error404', array(array('url' => $this->action)));
 		}
 		
-		$this->set(compact('data'));
+		$tagged = $this->paginate('Tagged', array('Tag.id' => $tag['Tag']['id']));
+		
+		// Build $data with actual Models data
+		$data = array();
+		
+		foreach($tagged as $row)
+		{
+			$data[] = ClassRegistry::init($row['Tagged']['model'])->read(null, $row['Tagged']['model_id']);
+		}
+		
+		$this->set(compact('tag', 'data'));
 	}
 	
 	/**
@@ -72,7 +104,7 @@ class TagsController extends TaggingAppController
 	 */
 	function admin_index()
 	{
-		$this->set('data', $this->paginate());
+		$this->set('data', $this->paginate('Tag'));
 	}
 	
 	/**

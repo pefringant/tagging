@@ -129,7 +129,7 @@ class TaggingHelper extends AppHelper
 	}
 
 	/**
-	 * Tag cloud generation
+	 * Tag cloud generator
 	 *
 	 * @param array $data Results from tags table, requires 'count' key for each row
 	 * @param array $options Options :
@@ -146,6 +146,7 @@ class TaggingHelper extends AppHelper
 	 * - itemType : type of item output, defaults to li
 	 * - itemClass : CSS class for items of type 'itemType'
 	 * - url : URL params to pass to HtmlHelper::url()
+	 *   - plugin : plugin name, defaults to 'tagging'. DO NOT use 'false' but 'null' for no plugin in the route
 	 *   - controller : Controller name, defaults to 'tags'
 	 *   - action : Controller action name, defaults to 'view'
 	 *   - pass : arguments to be passed to the Router, defaults to 'slug'. Can only be 'id', 'slug' or array('id', 'slug')

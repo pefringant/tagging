@@ -12,7 +12,7 @@ class Tag extends TaggingAppModel
 	var $actsAs = array(
 		'Tagging.Sluggable' => array(
 			'label' => 'name',
-			'length' => 255,
+			'length' => 160,
 			'translation' => 'utf-8'
 		)
 	);

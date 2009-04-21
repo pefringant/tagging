@@ -37,7 +37,7 @@ class TaggableBehavior extends ModelBehavior
 		}
 		
 		$tagged_conditions = array(
-			'model'     => $model->alias,
+			'model'    => $model->alias,
 			'model_id' => $model->id,
 		);
 		
@@ -50,6 +50,26 @@ class TaggableBehavior extends ModelBehavior
 		{
 			$this->Tag->saveTag($tag, $tagged_conditions);
 		}
+	}
+	
+	/**
+	 * Delete tag relations with current Model Id
+	 *
+	 * @param object $model
+	 */
+	function beforeDelete(&$model)
+	{
+		if(!$model->id)
+		{
+			return false;
+		}
+		
+		$conditions = array(
+			'model'    => $model->alias,
+			'model_id' => $model->id,
+		);
+		
+		return $this->Tagged->deleteAll($conditions, false, true);
 	}
 	
 	/**

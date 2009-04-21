@@ -14,6 +14,9 @@ Multi-model tagging plugin for CakePHP.
 	1.2. DB tables
 	--------------
 	Create two db tables as described in tagging/config/sql/tagging.sql
+	
+	Or run this in console:
+	cake schema run create Tagging -path plugins/tagging/config/sql
 
 2. BASIC SETUP
 ==============
@@ -51,12 +54,14 @@ Multi-model tagging plugin for CakePHP.
 		
 3. MANAGING TAGS
 =================
+Enable admin routing in /app/config/core.pp
+
 Go to URL /admin/tagging: you can add a tag or view existing tags.
 
 The default views here are very basic, they just had been baked with the cake "bake" shell.
 
-If any of the default views in this plugin does not meet your needs, create your own and place it in your app, in 
-{app}/views/plugins/tagging/{controller name}/{view name}.ctp
+If any of the default views in this plugin does not meet your needs, create your own and place it 
+in your own app folder, in {app}/views/plugins/tagging/{controller name}/{view name}.ctp
 
 For example, if you want to customize the admin list of tags, simply create your own in:
 {app}/views/plugins/tagging/tags/admin_index.ctp
@@ -195,7 +200,7 @@ For example, if you want to customize the admin list of tags, simply create your
 			'itemType' => 'span',         // type of item output
 			'itemClass' => 'cloud-item',  // CSS class for items of type 'itemType'
 			'url' => array(               // URL params
-				'plugin' => false,
+				'plugin' => null,
 				'controller' => 'mytags',
 				'action' => 'read',
 				'pass' => array('id', 'slug'),
@@ -220,7 +225,8 @@ For example, if you want to customize the admin list of tags, simply create your
 	
 	You have to create a view for this action, in {app}/views/plugins/tagging/tags/view.ctp
 	
-	Tag data available in $data.
+	Tag data available in $tag.
+	Paginated tagged records data available in $data.
 	
 	6.2 List tags
 	-------------
@@ -228,7 +234,7 @@ For example, if you want to customize the admin list of tags, simply create your
 	
 	You have to create a view for this action, in {app}/views/plugins/tagging/tags/index.ctp
 	
-	Tags data available in $data.
+	Tag cloud data available in $data.
 
 7. TRANSLATIONS
 ===============
