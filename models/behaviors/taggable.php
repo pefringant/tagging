@@ -101,14 +101,13 @@ class TaggableBehavior extends ModelBehavior
 	 *
 	 * @param object $model
 	 * @param int $id Related model primary key
-	 * @param array $options Options (same as classic find options)
 	 * @return mixed Found related tags
 	 */
 	function findTags(&$model, $id = null)
 	{
 		if(!$id && !$model->id)
 		{
-			return;
+			return null;
 		}
 		
 		if(!$id)
@@ -117,20 +116,6 @@ class TaggableBehavior extends ModelBehavior
 		}
 		
 		return $this->Tagged->findTags($model->alias, $id);
-	}
-	
-	/**
-	 * Find used tags, all models
-	 *
-	 * @param array $options Options (same as classic find options)
-	 * Two new keys available :
-	 * - min_count : minimum number of times a tag is used
-	 * - max_count : maximum number of times a tag is used
-	 * @return array
-	 */
-	function allTagCloud(&$model, $options = array())
-	{
-		return $this->Tag->tagCloud($options);
 	}
 	
 	/**
@@ -148,7 +133,7 @@ class TaggableBehavior extends ModelBehavior
 	}
 
 	/**
-	 * Returns records which shares the most tags with record of id $id
+	 * Returns records that share the most tags with record of id $id
 	 *
 	 * @param object $model
 	 * @param int $id Record Id

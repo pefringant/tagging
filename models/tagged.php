@@ -36,6 +36,9 @@ class Tagged extends TaggingAppModel
 	 *
 	 * @param string $model Model name
 	 * @param array $options Options (same as classic find options)
+	 * Two new keys available :
+	 * - min_count : minimum number of times a tag is used
+	 * - max_count : maximum number of times a tag is used
 	 * @return array
 	 */
 	function tagCloud($model, $options = array())
@@ -73,6 +76,12 @@ class Tagged extends TaggingAppModel
 		
 		// GROUP BY imposed
 		$options['group'] = array('Tag.id' . $having);
+		
+		// ORDER BY default
+		if(empty($options['order']))
+		{
+			$options['order'] = 'name ASC';
+		}
 
 		// Recursive imposed
 		$options['recursive'] = 0;
@@ -119,7 +128,9 @@ class Tagged extends TaggingAppModel
 		$order     = 'count DESC';
 		$recursive = -1;
 		
-		return $this->find('all', compact('fields', 'conditions', 'group', 'order', 'limit', 'recursive'));
+		return $this->find('all', compact(
+			'fields', 'conditions', 'group', 'order', 'limit', 'recursive'
+		));
 	}
 }
 ?>

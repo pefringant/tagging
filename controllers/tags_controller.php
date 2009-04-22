@@ -3,6 +3,10 @@ class TagsController extends TaggingAppController
 {
 	var $name = 'Tags';
 	
+	var $components = array('RequestHandler');
+	
+	var $helpers = array('Html', 'Form', 'Tagging.Tagging');
+	
 	var $paginate = array(
 		'Tag' => array(
 			'order' => 'Tag.name ASC',
@@ -15,8 +19,6 @@ class TagsController extends TaggingAppController
 			'limit' => 10
 		)
 	);
-	
-	var $components = array('RequestHandler');
 	
 	/**
 	 * JSON format tag suggestions based on first letters of tag name

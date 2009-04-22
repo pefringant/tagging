@@ -1,4 +1,12 @@
-Multi-model tagging plugin for CakePHP.
+Multi-model Tagging plugin for CakePHP.
+
+This plugin provides an easy to install solution for tagging any Model of your application.
+
+Features :
+* Easy install : download the files and create 2 db tables, no matter how many Models you want to tag.
+* To tag a Model, add an input field in your forms : a simple text input or an advanced one with existing tags suggested as you type.
+* Includes a Behavior that adds methods to linked Models to find record's tags, related records that share the most tags, etc.
+* Build and display tag clouds, with a total control of the tags you want to retrieve and how you want to display them.
 
 1. INSTALLATION
 ===============
@@ -50,7 +58,8 @@ Multi-model tagging plugin for CakePHP.
 		Requires jQuery in <head>
 		
 	That's it, you can tag any Model.
-	See code comments for options.
+	
+	See the wiki for more options : http://wiki.github.com/kalt/tagging
 		
 3. MANAGING TAGS
 =================
