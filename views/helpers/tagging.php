@@ -8,7 +8,7 @@ class TaggingHelper extends AppHelper
 	 *
 	 * @var boolean True if $this->init_suggest() is called
 	 */
-	var $init_suggest_done = false;
+	var $init_done = false;
 	
 	/**
 	 * TagSuggest options
@@ -52,54 +52,48 @@ class TaggingHelper extends AppHelper
 	 */
 	function init_suggest()
 	{
-		if(!$this->init_suggest_done)
+		if($this->init_done)
 		{
-			// Alert if jQuery not inclduded when debug > 0
-			if(Configure::read('debug') > 0)
-			{
-				$alert_mssg = __d('tagging', 'Tag suggestion requires jQuery !', true);
-				
-				$alert = "if(typeof jQuery != 'function'){
-					alert('{$alert_mssg}');
-				}";
-	
-				$this->Javascript->codeBlock($alert, array('inline' => false));
-			}
-			
-			// jQuery Tag plugin
-			// ©Remy Sharp
-			// http://remysharp.com/2007/12/28/jquery-tag-suggestion/
-			$this->Javascript->link(
-				'/tagging/js/tag.js',
-				false
-			);
-			
-			// Tag plugin CSS
-			$this->Html->css(
-				'/tagging/css/tagging.css',
-				null,
-				array('media' => 'screen'),
-				false
-			);
-			
-			// Init js
-			$options = $this->options;
-			
-			$selector = $options['selector'];
-			
-			unset($options['selector']);
-			
-			$script = "$(function () {
-				$('{$selector}').tagSuggest(
-					{$this->Javascript->object($options)}
-				);
-			});";
-			
-			$this->Javascript->codeBlock($script, array('inline' => false));
-			
-			// Init done !
-			$this->init_suggest_done = true;
+			return;
 		}
+		
+		// Alert if jQuery not inclduded when debug > 0
+		if(Configure::read('debug') > 0)
+		{
+			$alert_mssg = __d('tagging', 'Tag suggestion requires jQuery !', true);
+			
+			$alert = "if(typeof jQuery != 'function'){
+				alert('{$alert_mssg}');
+			}";
+
+			$this->Javascript->codeBlock($alert, array('inline' => false));
+		}
+		
+		// jQuery Tag plugin
+		// ©Remy Sharp
+		// http://remysharp.com/2007/12/28/jquery-tag-suggestion/
+		$this->Javascript->link('/tagging/js/tag.js', false);
+		
+		// Tag plugin CSS
+		$this->Html->css('/tagging/css/tagging.css', null, array('media' => 'screen'), false);
+		
+		// Init javascript
+		$options = $this->options;
+		
+		$selector = $options['selector'];
+		
+		unset($options['selector']);
+		
+		$script = "$(function () {
+			$('{$selector}').tagSuggest(
+				{$this->Javascript->object($options)}
+			);
+		});";
+		
+		$this->Javascript->codeBlock($script, array('inline' => false));
+		
+		// Init done !
+		$this->init_done = true;
 	}
 	
 	/**
@@ -164,18 +158,18 @@ class TaggingHelper extends AppHelper
 		$options = Set::merge(array(
 			'max_scale' => 7,
 			'linkClass' => 'tag-size-',
-			'element' => false,
-			'type' => 'ul',
-			'id' => false,
-			'class' => false,
-			'itemType' => 'li',
+			'element'   => false,
+			'type'      => 'ul',
+			'id'        => false,
+			'class'     => false,
+			'itemType'  => 'li',
 			'itemClass' => false,
 			'url' => array(
-				'plugin' => 'tagging',
+				'plugin'     => 'tagging',
 				'controller' => 'tags',
-				'action' => 'view',
-				'pass' => 'slug',
-				'admin' => false
+				'action'     => 'view',
+				'pass'       => 'slug',
+				'admin'      => false
 			),
 		), (array)$options);
 		
