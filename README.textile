@@ -26,9 +26,9 @@ Or run this in console:
 
 <pre><code>cake schema run create Tagging -path plugins/tagging/config/sql</code></pre>
 
-Let's see how to tag any Model. The plugin provides a Behavior and a Helper to achieve that.
-
 h1. 2. Basic setup
+
+Let's see how to tag any Model. The plugin provides a Behavior and a Helper to achieve that.
 
 h2. 2.1. Models
 
@@ -320,8 +320,8 @@ Will output:
 	<span class="cloud-item"><a href="/mytags/read/1/tag1-slug" class="size-class-10">Tag 1</a></span>
 	<span class="cloud-item"><a href="/mytags/read/2/tag2-slug" class="size-class-3">Tag 2</a></span>
 	<span class="cloud-item"><a href="/mytags/read/3/tag3-slug" class="size-class-7">Tag 3</a></span>
-	...
 </div></code></pre>
+
 
 h1. 6. Browsing Tags
 
