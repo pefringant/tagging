@@ -1,0 +1,414 @@
+h1. Multi-model Tagging plugin for CakePHP
+
+This plugin provides an easy to install solution for tagging any Model of your application.
+
+**Features :**
+* Easy install : download the files and create 2 db tables, no matter how many Models you want to tag.
+* To tag a Model, add an input field in your forms : a simple text input or an advanced one with existing tags suggested as you type.
+* Includes a Behavior that adds methods to linked Models to find record's tags, related records that share the most tags, etc.
+* Build and display tag clouds, with a total control of the tags you want to retrieve and how you want to display them.
+
+h1. 1. Installation
+
+h2. 1.1 Files
+
+To install, copy the 'tagging' directory to the 'plugins' folder:
+
+<pre><code>git clone git://github.com/kalt/tagging.git</code></pre>
+
+Or click 'download' and copy the content of the zip file into your 'plugins' folder.
+
+h2. 1.2. DB Tables
+
+Create two db tables as described in tagging/config/sql/tagging.sql
+
+Or run this in console:
+
+<pre><code>cake schema run create Tagging -path plugins/tagging/config/sql</code></pre>
+
+Let's see how to tag any Model. The plugin provides a Behavior and a Helper to achieve that.
+
+h1. 2. Basic setup
+
+h2. 2.1. Models
+
+<pre><code>class Article extends AppModel
+{
+	var $actsAs = array('Tagging.Taggable');
+}</code></pre>
+
+h2. 2.2. Controllers
+
+<pre><code>class ArticlesController extends AppController
+{
+	var $helpers = array('Tagging.Tagging');
+}</code></pre>
+
+h2. 2.3. Views
+
+A single input field for comma-separated tags, in add/edit views.
+
+h3. 2.3.a. Classic input
+
+<pre><code>echo $form->input('tags');</code></pre>
+
+h3. 2.3.b. With ajax tag suggestions
+
+<pre><code>echo $tagging->input('tags');</code></pre>
+
+Requires jQuery in <code><head>...</head></code>
+	
+That's it, you can tag any Model.
+
+h3. 2.3.c. Ajax tag suggestions options
+
+If you choose this solution to add tags to a record, you will see suggested tags as you type.
+
+You can change any option as with the core Paginator Helper:
+<pre><code>$tagging->options(array('option_key' => 'value', ...));</code></pre>
+
+Here are the default options :
+* selector : DOM selector to be observed (try to keep it simple, one id ('#xyz') or one class ('.xyz') only). Defaults to '.tagSuggest'.
+* url : url to get suggestions via ajax POST call (JSON formatted response). Defaults to '/tagging/tags/suggest'.
+* delay : sets the delay between keyup and the request (in milliseconds). Defaults to 500.
+* matchClass : CSS class applied to the suggestions. Defaults to 'tagMatches'.
+* sort : boolean to force the sorted order of suggestions. Defaults to false.
+* tagContainer : the type of element used to contain the suggestions. Defaults to 'span'.
+* tagWrap : the type of element the suggestions a wrapped in. Defaults to 'span'.
+* tags : array of tags specific to this instance of element matches (if you don't want to use ajax but a predefined list of tags). Defaults to null.
+
+If you want to change the way tag suggestions are displayed, simply change the 'matchClass' option and provide your own CSS styles according to the new 'matchClass' name.
+
+The second parameter of $tagging->input() can be an array of options just as the classic $form->input().
+
+h1. 3. Managing Tags
+
+Enable admin routing in <code>{app}/config/core.pp</code>
+
+Go to URL <code>/admin/tagging</code>: you can add a tag or view existing tags.
+
+The default views here are very basic, they just had been baked with the cake "bake" shell.
+
+If any of the default views in this plugin does not meet your needs, create your own and place it in your own app folder, in <code>{app}/views/plugins/tagging/{controller name}/{view name}.ctp</code>
+
+For example, if you want to customize the admin list of tags, simply create your own in: <code>{app}/views/plugins/tagging/tags/admin_index.ctp</code>
+
+h1. 4. Finding Tags
+
+<pre><code>findTags($id);</code></pre>
+If Model id is set, $id is optionnal. Returns record's tags.
+
+<pre><code>findRelated($id, $restrict_to_model, $limit);</code></pre>
+If Model id is set, $id is optionnal. If $restrict_to_model is true, returns model's records that share the most tags with record of id $id. If $restrict_to_model is false, returns all records that share the most tags with record of id $id.
+
+h2. 4.1. Record's tags
+
+<pre><code>class ArticlesController extends AppController
+{
+	function view($id)
+	{
+		$this->Article->id = $id;
+		
+		$article = $this->Article->read();
+		
+		$articleTags = $this->Article->findTags();
+		
+		$this->set(compact('article', 'articleTags')); 
+	}
+}</code></pre>
+
+In the corresponding view :
+<pre><code><h1><?php echo $article['Article']['title']; ?></h1>
+<?php if(!empty($articleTags)): ?>
+<p><b>Tags:</b> 
+	<?php foreach($articleTags as $tag): ?>
+	<span><?php echo $html->link($tag['Tag']['name'], array(
+		'plugin' => 'tagging',
+		'controller' => 'tags',
+		'action' => 'view',
+		$tag['Tag']['slug']
+	)); ?></span>
+	<?php endforeach; ?>
+ </p>
+<?php endif; ?></code></pre>
+
+h2. 4.2. Record's related records (same Model)
+
+<pre><code>class ArticlesController extends AppController
+{
+	function view($id)
+	{
+		$this->Article->id = $id;
+		
+		$article = $this->Article->read();
+		
+		// Find 5 related Articles :
+		$relatedArticles = $this->Article->findRelated(true, 5);
+		
+		$this->set(compact('article', 'relatedArticles')); 
+	}
+}</code></pre>
+
+In the corresponding view :
+<pre><code><h1><?php echo $article['Article']['title']; ?></h1>
+<?php if(!empty($relatedArticles)): ?>
+<h2>Related Articles:</h2>
+<ul>
+	<?php foreach($relatedArticles as $article): ?>
+	<li><?php echo $html->link($article['Article']['title'], array(
+		'controller' => 'articles',
+		'action' => 'view',
+		$article['Article']['id']
+	)); ?></li>
+	<?php endforeach; ?>
+ </ul>
+<?php endif; ?></code></pre>
+
+h2. 4.3. Record's related records (all Models)
+
+<pre><code>class ArticlesController extends AppController
+{
+	function view($id)
+	{
+		$this->Article->id = $id;
+		
+		$article = $this->Article->read();
+		
+		// Find 5 related Ressources :
+		$relatedRessources = $this->Article->findRelated(false, 5);
+		
+		$this->set(compact('article', 'relatedRessources')); 
+	}
+}</code></pre>
+
+In the corresponding view :
+<pre><code><h1><?php echo $article['Article']['title']; ?></h1>
+<?php if(!empty($relatedRessources)): ?>
+<h2>Related Ressources:</h2>
+<ul>
+	<?php foreach($relatedRessources as $row):
+		$model_name  = key($row);
+		
+		switch($model_name)
+		{
+			case 'Article':
+				$link = $html->link($row['Article']['title'], array(
+					'controller' => 'articles',
+					'action' => 'view',
+					$row['Article']['id']
+				));
+				break;
+				
+			case 'Video':
+				$link = $html->link($row['Video']['title'], array(
+					'controller' => 'videos',
+					'action' => 'play',
+					$row['Video']['id']
+				));
+				break;
+		} ?>
+	<li><?php echo $link; ?></li>
+	<?php endforeach; ?>
+ </ul>
+<?php endif; ?></code></pre>
+
+h1. 5. Tag Clouds
+
+h2. 5.1. Tag Cloud (Model specific)
+
+<pre><code>tagCloud($options);</code></pre>
+$options is an array of options :
+
+* min_count : minimum number of times a tag is used
+* max_count : maximum number of times a tag is used
+* order : tags order, defaults to 'name ASC'
+* limit : number of tags returned
+
+<pre><code>class ArticlesController extends AppController
+{
+	function index()
+	{
+		$articles  = $this->Article->paginate();
+		$tagCloud = $this->Article->tagCloud();
+		
+		$this->set(compact('articles', 'tagCloud')); 
+	}
+}</code></pre>
+
+h2. 5.2. Tag Cloud (all Models)
+
+<pre><code>Tag::tagCloud($options);</code></pre>
+$options is an array of options :
+
+* min_count : minimum number of times a tag is used
+* max_count : maximum number of times a tag is used
+* order : tags order, defaults to 'name ASC'
+* limit : number of tags returned
+
+<pre><code>class AppController extends Controller
+{
+	var $uses = array('Tagging.Tag');
+
+	function beforeRender()
+	{
+		$mainTagCloud = $this->Tag->tagCloud();
+		
+		$this->set(compact('mainTagCloud')); 
+	}
+}</code></pre>
+
+h2. 5.3. Displaying tag clouds
+
+h3. 5.3.a. Basic display
+
+<pre><code>echo $tagging->generateCloud($tagCloud);</code></pre>
+
+Will output:
+<pre><code><ul>
+	<li><a href="/tagging/tags/view/tag1-slug" class="tag-size-7">Tag 1</a></li>
+	<li><a href="/tagging/tags/view/tag2-slug" class="tag-size-2">Tag 2</a></li>
+	<li><a href="/tagging/tags/view/tag3-slug" class="tag-size-5">Tag 3</a></li>
+	...
+</ul></code></pre>
+
+Note the 'tag-size-x' CSS class (with x, the 'scale factor', between 1 and 7 by default).
+
+h3. 5.3.b. Format cloud items with an element
+
+<pre><code>echo $tagging->generateCloud($tagCloud, array('element' => 'cloud_item'));</code></pre>
+	
+Element in views/elements/cloud_item.ctp:
+3 predefined values available :
+* $data: tag array
+* $scale: scale factor, from 1 to $options['max_scale'] (defaults to 7)
+* $percentage: scale factor from 0 to 100.
+	
+<pre><code><a href="/tagging/tags/view/<?php echo $data['Tag']['id']; ?>" style="font-size:<?php echo $scale; ?>em;">
+	<?php echo $data['Tag']['name']; ?>
+</a></code></pre>
+
+Will output:
+<pre><code><ul>
+	<li><a href="/tagging/tags/view/1" style="font-size:7em">Tag 1</a></li>
+	<li><a href="/tagging/tags/view/2" style="font-size:2em">Tag 2</a></li>
+	<li><a href="/tagging/tags/view/3" style="font-size:5em">Tag 3</a></li>
+	...
+</ul></code></pre>
+
+h3. 5.3.c. All output options
+
+<pre><code>echo $tagging->generateCloud($tagCloud, array(
+	'max_scale' => 10,            // CSS class max scale
+	'linkClass' => 'size-class-', // CSS class name prefix
+	'element' => false,           // Element, see above
+	'type' => 'div',              // Type of output 
+	'id' => 'tag-cloud',          // DOM id for top level 'type'
+	'class' => 'cloud',           // CSS class for top level 'type'
+	'itemType' => 'span',         // type of item output
+	'itemClass' => 'cloud-item',  // CSS class for items of type 'itemType'
+	'url' => array(               // URL params
+		'plugin' => null,
+		'controller' => 'mytags',
+		'action' => 'read',
+		'pass' => array('id', 'slug'),
+		'admin' => false
+	)
+));</code></pre>
+
+Will output:
+<pre><code><div id="tag-cloud" class="cloud">
+	<span class="cloud-item"><a href="/mytags/read/1/tag1-slug" class="size-class-10">Tag 1</a></span>
+	<span class="cloud-item"><a href="/mytags/read/2/tag2-slug" class="size-class-3">Tag 2</a></span>
+	<span class="cloud-item"><a href="/mytags/read/3/tag3-slug" class="size-class-7">Tag 3</a></span>
+	...
+</div></code></pre>
+
+h1. 6. Browsing Tags
+
+h2. 6.1. View tag
+
+Default URL: /tagging/tags/view/ followed by tag id, tag slug, or both in any order.
+
+You have to create a view for this action, in {app}/views/plugins/tagging/tags/view.ctp
+
+* Tag data available in <code>$tag</code>.
+* Paginated tagged records data available in <code>$data</code>.
+
+h3. Exemple
+
+<pre><code><?php
+$this->pageTitle = 'Viewing Tag "' . $tag['Tag']['name'].'"';
+
+$paginator->options(array('url' => $this->passedArgs));
+?>
+
+<h1><?php echo $tag['Tag']['name']; ?></h1>
+
+<div id="paginator-counter">
+	<?php echo $paginator->counter(array('format' => "Page %page% on %pages%, %current% ressources on %count%")); ?> 
+</div>
+	
+<?php foreach($data as $row):
+	$model_name  = key($row);
+		
+	switch($model_name)
+	{
+		case 'Article':
+			$link = $html->link($row['Article']['title'], array(
+				'plugin' => null,
+				'controller' => 'articles',
+				'action' => 'view',
+				$row['Article']['id']
+			));
+			$description = $row['Article']['body'];
+			break;
+			
+		case 'Video':
+			$link = $html->link($row['Video']['title'], array(
+				'plugin' => null,
+				'controller' => 'videos',
+				'action' => 'play',
+				$row['Video']['id']
+			));
+			$description = $row['Video']['description'];
+			break;
+	} ?>
+	<div class="ressource">
+		<h2><?php echo $link; ?></h2>
+		<p align="justify"><?php echo $description; ?></p>		
+	</div>
+<?php endforeach; ?> 
+	
+<div class="paging">
+	<?php echo $paginator->prev('<< '.__('Previous', true));?>
+ |  <?php echo $paginator->numbers();?>
+	<?php echo $paginator->next(__('Next', true).' >>');?>
+</div></code></pre>
+
+h2. 6.2. List tags
+
+Default URL: /tagging/tags
+
+You have to create a view for this action, in {app}/views/plugins/tagging/tags/index.ctp
+
+Tag cloud data available in <code>$data</code>.
+
+h3. Exemple
+
+<pre><code><?php $this->pageTitle = "Tags"; ?>
+
+<h1>Main Tag Cloud</h1>
+
+<?php echo $tagging->generateCloud($data, array('id' => 'main-tag-cloud')); ?></code></pre>
+
+h1. 7. Translations
+
+Available languages :
+* English (default)
+* French
+
+To change (for French for example), add this line in your app/config/bootstrap.php :
+
+<pre><code>Configure::write('Config.language', 'fre');</code></pre>
+
+To add a translation, open the file /tagging/locale/tagging.pot in PoEdit or equivalent, then save the translation to /tagging/locale/{your language}/LC_MESSAGES/tagging.po 
