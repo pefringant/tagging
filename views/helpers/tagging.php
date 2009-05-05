@@ -80,9 +80,13 @@ class TaggingHelper extends AppHelper
 		// Init javascript
 		$options = $this->options;
 		
+		// DOM selector
 		$selector = $options['selector'];
 		
 		unset($options['selector']);
+		
+		// Ajax URL
+		$options['url'] = $this->Html->url($options['url']);
 		
 		$script = "$(function () {
 			$('{$selector}').tagSuggest(
@@ -155,6 +159,11 @@ class TaggingHelper extends AppHelper
 	 */
 	function generateCloud($data = array(), $options = array())
 	{
+		if(empty($data))
+		{
+			return;
+		}
+		
 		$options = Set::merge(array(
 			'max_scale' => 7,
 			'linkClass' => 'tag-size-',
