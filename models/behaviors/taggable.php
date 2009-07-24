@@ -69,7 +69,9 @@ class TaggableBehavior extends ModelBehavior
 			'model_id' => $model->id,
 		);
 		
-		return $this->Tagged->deleteAll($conditions, false, true);
+		$this->Tagged->deleteAll($conditions, false, true);
+		
+		return true;
 	}
 	
 	/**
