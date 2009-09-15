@@ -14,6 +14,7 @@
     tags - optional array of tags specific to this instance of element matches
     delay - optional sets the delay between keyup and the request - can help throttle ajax requests, defaults to zero delay
     start - optional sets the minimum length of the word before the request - can help throttle ajax requests, defaults to 1
+    limit - optional sets the maximum number of results - can help throttle ajax requests, defaults to 10
     separator - optional separator string, defaults to ' ' (Brian J. Cardiff)
   @license: Creative Commons License - ShareAlike http://creativecommons.org/licenses/by-sa/3.0/
   @version: 1.4
@@ -51,8 +52,9 @@
             'sort' : true,
             'tags' : null,
             'url' : null,
-            'start' : 1,
             'delay' : 0,
+            'start' : 1,
+            'limit' : 10,
             'separator' : ' '
         };
 
@@ -102,44 +104,46 @@
                     chosenTags[currentTags[i].toLowerCase()] = true;
                 }
 
-                if (currentTag.tag && currentTag.tag.length > settings.start) {
-                    // collect potential tags
-                    if (settings.url) {
-                        $.ajax({
-                        	'type' : 'POST',
-                            'url' : settings.url,
-                            'dataType' : 'json',
-                            'data' : { 'tag' : currentTag.tag },
-                            'async' : false, // wait until this is ajax hit is complete before continue
-                            'success' : function (m) {
-                                matches = m;
-                            }
-                        });
-                    } else {
-                        for (i = 0; i < userTags.length; i++) {
-                            if (userTags[i].indexOf(currentTag.tag) === 0) {
-                                matches.push(userTags[i]);
-                            }
-                        }                        
-                    }
-                    
-                    matches = $.grep(matches, function (v, i) {
-                        return !chosenTags[v.toLowerCase()];
-                    });
-
-                    if (settings.sort) {
-                        matches = matches.sort();
-                    }                    
-
-                    for (i = 0; i < matches.length; i++) {
-                        html += '<' + settings.tagWrap + ' class="_tag_suggestion">' + matches[i] + '</' + settings.tagWrap + '>';
-                    }
-
-                    tagMatches.html(html);
-                    suggestionsShow = !!(matches.length);
-                } else {
-                    hideSuggestions();
-                }
+                if (currentTag.tag) {
+                    if(currentTag.tag.length > settings.start) {
+	                    // collect potential tags
+	                    if (settings.url) {
+	                        $.ajax({
+	                        	'type' : 'POST',
+	                            'url' : settings.url,
+	                            'dataType' : 'json',
+	                            'data' : { 'tag' : currentTag.tag, 'limit' : settings.limit },
+	                            'async' : false, // wait until this is ajax hit is complete before continue
+	                            'success' : function (m) {
+	                                matches = m;
+	                            }
+	                        });
+	                    } else {
+	                        for (i = 0; i < userTags.length; i++) {
+	                            if (userTags[i].indexOf(currentTag.tag) === 0) {
+	                                matches.push(userTags[i]);
+	                            }
+	                        }                        
+	                    }
+	                    
+	                    matches = $.grep(matches, function (v, i) {
+	                        return !chosenTags[v.toLowerCase()];
+	                    });
+	
+	                    if (settings.sort) {
+	                        matches = matches.sort();
+	                    }                    
+	
+	                    for (i = 0; i < matches.length; i++) {
+	                        html += '<' + settings.tagWrap + ' class="_tag_suggestion">' + matches[i] + '</' + settings.tagWrap + '>';
+	                    }
+	
+	                    tagMatches.html(html);
+	                    suggestionsShow = !!(matches.length);
+	                } else {
+	                    hideSuggestions();
+	                }
+	             }
             }
 
             function hideSuggestions() {

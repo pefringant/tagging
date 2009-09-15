@@ -42,9 +42,10 @@ class Tag extends TaggingAppModel
 	 * Returns tags matching first letters
 	 *
 	 * @param string $first_letters
+	 * @param int $limit Max number of results, defaults to 10
 	 * @return array Matching tag names as a simple associative array
 	 */
-	function suggest($first_letters = '')
+	function suggest($first_letters = '', $limit = 10)
 	{
 		if(empty($first_letters))
 		{
@@ -58,7 +59,6 @@ class Tag extends TaggingAppModel
 		$fields     = array('name');
 		$conditions = array('name LIKE' => "{$first_letters}%");
 		$order      = 'name ASC';
-		$limit      = 10;
 		$recursive  = -1;
 		
 		return array_values($this->find('list', compact(

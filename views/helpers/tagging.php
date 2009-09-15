@@ -17,6 +17,7 @@ class TaggingHelper extends AppHelper
 	 * - selector : DOM selector to be observed by the plugin (try to keep it simple, id ('#xyz') or class ('.xyz') only).
 	 * - url : url to get suggestions via ajax POST call (JSON formatted response)
 	 * - delay : sets the delay between keyup and the request (in milliseconds)
+	 * - limit : maximum number of results
 	 * - start : minimum length of the word before a request is sent
 	 * - separator : tag separator string
 	 * - matchClass : class applied to the suggestions
@@ -30,6 +31,7 @@ class TaggingHelper extends AppHelper
 		'url' => '/tagging/tags/suggest',
 		'delay' => 500,
 		'start' => 1,
+		'limit' => 10,
 		'separator' => ', ',
 		'matchClass' => 'tagMatches',
 		'sort' => false,

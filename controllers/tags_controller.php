@@ -30,8 +30,9 @@ class TagsController extends TaggingAppController
 			App::import('Core', 'Sanitize');
 			
 			$first_letters = Sanitize::clean($this->params['form']['tag']);
+			$limit = Sanitize::clean($this->params['form']['limit']);
 			
-			$this->set('matches', $this->Tag->suggest($first_letters));
+			$this->set('matches', $this->Tag->suggest($first_letters, $limit));
 		}
 	}
 	
