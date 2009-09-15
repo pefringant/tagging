@@ -56,30 +56,31 @@ class TaggingHelper extends AppHelper
 	 */
 	function init_suggest()
 	{
-		if($this->init_done)
+		if(!$this->init_done)
 		{
-			return;
-		}
-		
-		// Alert if jQuery not inclduded when debug > 0
-		if(Configure::read('debug') > 0)
-		{
-			$alert_mssg = __d('tagging', 'Tag suggestion requires jQuery !', true);
+			// Alert if jQuery not inclduded when debug > 0
+			if(Configure::read('debug') > 0)
+			{
+				$alert_mssg = __d('tagging', 'Tag suggestion requires jQuery !', true);
+				
+				$alert = "if(typeof jQuery != 'function'){
+					alert('{$alert_mssg}');
+				}";
+	
+				$this->Javascript->codeBlock($alert, array('inline' => false));
+			}
 			
-			$alert = "if(typeof jQuery != 'function'){
-				alert('{$alert_mssg}');
-			}";
-
-			$this->Javascript->codeBlock($alert, array('inline' => false));
+			// jQuery Tag plugin
+			// ©Remy Sharp
+			// http://remysharp.com/2007/12/28/jquery-tag-suggestion/
+			$this->Javascript->link('/tagging/js/tag.js', false);
+			
+			// Tag plugin CSS
+			$this->Html->css('/tagging/css/tagging.css', null, array('media' => 'screen'), false);
+			
+			// Init done !
+			$this->init_done = true;
 		}
-		
-		// jQuery Tag plugin
-		// ©Remy Sharp
-		// http://remysharp.com/2007/12/28/jquery-tag-suggestion/
-		$this->Javascript->link('/tagging/js/tag.js', false);
-		
-		// Tag plugin CSS
-		$this->Html->css('/tagging/css/tagging.css', null, array('media' => 'screen'), false);
 		
 		// Init javascript
 		$options = $this->options;
@@ -99,9 +100,6 @@ class TaggingHelper extends AppHelper
 		});";
 		
 		$this->Javascript->codeBlock($script, array('inline' => false));
-		
-		// Init done !
-		$this->init_done = true;
 	}
 	
 	/**
