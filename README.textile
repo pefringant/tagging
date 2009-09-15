@@ -72,6 +72,7 @@ Here are the default options :
 * url : url to get suggestions via ajax POST call (JSON formatted response). Defaults to '/tagging/tags/suggest'.
 * delay : sets the delay between keyup and the request (in milliseconds). Defaults to 500.
 * start : minimum length of the word before a request is sent. Defaults to 1.
+* limit : maximum number of results. Defaults to 10.
 * matchClass : CSS class applied to the suggestions. Defaults to 'tagMatches'.
 * sort : boolean to force the sorted order of suggestions. Defaults to false.
 * tagContainer : the type of element used to contain the suggestions. Defaults to 'span'.
