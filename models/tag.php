@@ -53,13 +53,8 @@ class Tag extends TaggingAppModel
 		
 		$first_letters = trim($first_letters);
 		
-		App::import('Core', 'Multibyte');
+		if(empty($first_letters)) return;
 		
-		if(Multibyte::strlen($first_letters) <= 2)
-		{
-			return;
-		}
-
 		$fields     = array('name');
 		$conditions = array('name LIKE' => "{$first_letters}%");
 		$order      = 'name ASC';

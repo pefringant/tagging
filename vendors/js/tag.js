@@ -13,6 +13,7 @@
     url - optional url to get suggestions if setGlobalTags isn't used.  Must return array of suggested tags
     tags - optional array of tags specific to this instance of element matches
     delay - optional sets the delay between keyup and the request - can help throttle ajax requests, defaults to zero delay
+    start - optional sets the minimum length of the word before the request - can help throttle ajax requests, defaults to 1
     separator - optional separator string, defaults to ' ' (Brian J. Cardiff)
   @license: Creative Commons License - ShareAlike http://creativecommons.org/licenses/by-sa/3.0/
   @version: 1.4
@@ -50,7 +51,7 @@
             'sort' : true,
             'tags' : null,
             'url' : null,
-            'limit' : null,
+            'start' : 1,
             'delay' : 0,
             'separator' : ' '
         };
@@ -101,7 +102,7 @@
                     chosenTags[currentTags[i].toLowerCase()] = true;
                 }
 
-                if (currentTag.tag) {
+                if (currentTag.tag && currentTag.tag.length > settings.start) {
                     // collect potential tags
                     if (settings.url) {
                         $.ajax({

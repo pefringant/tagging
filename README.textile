@@ -71,6 +71,7 @@ Here are the default options :
 * selector : DOM selector to be observed (try to keep it simple, one id ('#xyz') or one class ('.xyz') only). Defaults to '.tagSuggest'.
 * url : url to get suggestions via ajax POST call (JSON formatted response). Defaults to '/tagging/tags/suggest'.
 * delay : sets the delay between keyup and the request (in milliseconds). Defaults to 500.
+* start : minimum length of the word before a request is sent. Defaults to 1.
 * matchClass : CSS class applied to the suggestions. Defaults to 'tagMatches'.
 * sort : boolean to force the sorted order of suggestions. Defaults to false.
 * tagContainer : the type of element used to contain the suggestions. Defaults to 'span'.
